@@ -1,8 +1,8 @@
 package com.tikal.tallerWeb.server;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.tikal.tallerWeb.client.GreetingService;
 import com.tikal.tallerWeb.shared.FieldVerifier;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * The server-side implementation of the RPC service.
