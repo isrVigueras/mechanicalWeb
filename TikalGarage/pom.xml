@@ -18,28 +18,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jasperreports-maven-plugin</artifactId>
-				<version>1.0-beta-2</version>
-				<configuration>
-					<outputDirectory>${project.build.directory}</outputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile-reports</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>net.sf.jasperreports</groupId>
-						<artifactId>jasperreports</artifactId>
-						<version>6.0.4</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -66,18 +44,21 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
+				 <executions>
+		            <execution>
+		              <id>default-cli</id>
+		              <goals>
+		                <goal>copy-dependencies</goal>
+		              </goals>
+		              <configuration>
+		                <outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
+		                <overWriteReleases>false</overWriteReleases>
+		                <overWriteSnapshots>false</overWriteSnapshots>
+		                <overWriteIfNewer>true</overWriteIfNewer>
+		                <excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
+		              </configuration>
+		            </execution>
+		          </executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -91,7 +72,7 @@
 								<mkdir dir="${basedir}/target/data" />
 								<mkdir dir="${basedir}/target/data/cache" />
 								<copy todir="${basedir}/target">
-									<fileset dir="${basedir}/src/main/resources" includes="*.*" />
+									<fileset dir="${basedir}/src/resources" includes="*.*" />
 								</copy>
 							</target>
 						</configuration>
@@ -100,6 +81,11 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+			   <groupId>com.google.appengine</groupId>
+			   <artifactId>appengine-maven-plugin</artifactId>
+			   <version>1.9.42</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -121,6 +107,7 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>technology.tikal</groupId>
@@ -260,11 +247,7 @@
 			<version>4.0.7</version>
 		</dependency>
 		<!-- jasper reports -->
-		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>6.0.4</version>
-		</dependency>
+
 		<!-- generacion svg -->
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
