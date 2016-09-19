@@ -39,75 +39,99 @@ import technology.tikal.accounts.model.session.SessionInfo;
  */
 @Controller
 public class LoginControllerImp implements LoginController {
-    private static final Logger LOGGER = Logger.getLogger(LoginControllerImp.class);
-    @Autowired
-    private LoginService loginService;
-    @Autowired
-    private MensajesControl mensajesControl;
+
+	@Override
+	public void start(StartupController parent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean login(String usuario, char[] password, String otp) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
+	}
+//    private static final Logger LOGGER = Logger.getLogger(LoginControllerImp.class);
 //    @Autowired
-//    @Qualifier("accounts-RestTemplateFactory")
-//    private RestTemplateFactory accountsFactory;
+//    private LoginService loginService;
 //    @Autowired
-//    @Qualifier("taller-RestTemplateFactory")
-//    private RestTemplateFactory tallerFactory;
-//    @Autowired
-//    @Qualifier("customer-RestTemplateFactory")
-//    private RestTemplateFactory customerFactory;
-//    @Autowired
-    private CustomRestErrorHandler errorHandler;
-    
-    private StartupController parent;
-    private boolean iniciado;
-    
-    @Override
-    public boolean login(String usuario, char[] password, String otp) {
-        try {
-            AuthenticationRequest request = new AuthenticationRequest();
-            request.setUser(usuario);
-            request.setPassword(new String(password));
-            if (!StringUtils.isEmpty(otp)) {
-                request.setOtp(Integer.valueOf(otp));
-            }
-            SessionInfo info = loginService.login(request);
-//            tallerFactory.setUsername(info.getUser());
-//            tallerFactory.setPassword(info.getToken());
-//            tallerFactory.setErrorHandler(errorHandler);
-//            tallerFactory.init();
+//    private MensajesControl mensajesControl;
+////    @Autowired
+////    @Qualifier("accounts-RestTemplateFactory")
+////    private RestTemplateFactory accountsFactory;
+////    @Autowired
+////    @Qualifier("taller-RestTemplateFactory")
+////    private RestTemplateFactory tallerFactory;
+////    @Autowired
+////    @Qualifier("customer-RestTemplateFactory")
+////    private RestTemplateFactory customerFactory;
+////    @Autowired
+//    private CustomRestErrorHandler errorHandler;
+//    
+//    private StartupController parent;
+//    private boolean iniciado;
+//    
+//    @Override
+//    public boolean login(String usuario, char[] password, String otp) {
+//        try {
+//            AuthenticationRequest request = new AuthenticationRequest();
+//            request.setUser(usuario);
+//            request.setPassword(new String(password));
+//            if (!StringUtils.isEmpty(otp)) {
+//                request.setOtp(Integer.valueOf(otp));
+//            }
+//            SessionInfo info = loginService.login(request);
+////            tallerFactory.setUsername(info.getUser());
+////            tallerFactory.setPassword(info.getToken());
+////            tallerFactory.setErrorHandler(errorHandler);
+////            tallerFactory.init();
+////
+////            customerFactory.setUsername(info.getUser());
+////            customerFactory.setPassword(info.getToken());
+////            customerFactory.setErrorHandler(errorHandler);
+////            customerFactory.init();
+//            if (parent != null) {
+//                parent.afterLogin();
+//            }
+//            iniciado = false;
+//            return true;
+//        } catch(ResourceAccessException ex) {
+//            LoginControllerImp.LOGGER.error("error en login" + ex.getMessage());
+//        } catch (HttpClientErrorException e) {
+//            mensajesControl.reportaError("Usuario o pasword no validos");
+//        }
+//        return false;
+//    }
 //
-//            customerFactory.setUsername(info.getUser());
-//            customerFactory.setPassword(info.getToken());
-//            customerFactory.setErrorHandler(errorHandler);
-//            customerFactory.init();
-            if (parent != null) {
-                parent.afterLogin();
-            }
-            iniciado = false;
-            return true;
-        } catch(ResourceAccessException ex) {
-            LoginControllerImp.LOGGER.error("error en login" + ex.getMessage());
-        } catch (HttpClientErrorException e) {
-            mensajesControl.reportaError("Usuario o pasword no validos");
-        }
-        return false;
-    }
-
-    @Override
-    public synchronized void start(StartupController parent) {
-        if (!iniciado) {
-//            accountsFactory.init();
-            iniciado = true;
-            this.parent = parent;
-        }
-    }
-
-    @Override
-    public void cancel() {
-//        accountsFactory.shutdown();
-        System.exit(0);
-    }
-
-    @Override
-    public void finish() {
-        
-    }
+//    @Override
+//    public synchronized void start(StartupController parent) {
+//        if (!iniciado) {
+////            accountsFactory.init();
+//            iniciado = true;
+//            this.parent = parent;
+//        }
+//    }
+//
+//    @Override
+//    public void cancel() {
+////        accountsFactory.shutdown();
+//        System.exit(0);
+//    }
+//
+//    @Override
+//    public void finish() {
+//        
+//    }
 }

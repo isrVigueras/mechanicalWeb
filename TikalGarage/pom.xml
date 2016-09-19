@@ -44,48 +44,27 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.6</version>
-				 <executions>
-		            <execution>
-		              <id>default-cli</id>
-		              <goals>
-		                <goal>copy-dependencies</goal>
-		              </goals>
-		              <configuration>
-		                <outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
-		                <overWriteReleases>false</overWriteReleases>
-		                <overWriteSnapshots>false</overWriteSnapshots>
-		                <overWriteIfNewer>true</overWriteIfNewer>
-		                <excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
-		              </configuration>
-		            </execution>
-		          </executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
 				<executions>
 					<execution>
-						<id>generate-sources</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<target>
-								<mkdir dir="${basedir}/target/data" />
-								<mkdir dir="${basedir}/target/data/cache" />
-								<copy todir="${basedir}/target">
-									<fileset dir="${basedir}/src/resources" includes="*.*" />
-								</copy>
-							</target>
-						</configuration>
+						<id>default-cli</id>
 						<goals>
-							<goal>run</goal>
+							<goal>copy-dependencies</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+							<excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
 			<plugin>
-			   <groupId>com.google.appengine</groupId>
-			   <artifactId>appengine-maven-plugin</artifactId>
-			   <version>1.9.42</version>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>1.9.42</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -107,7 +86,7 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>technology.tikal</groupId>
@@ -280,14 +259,21 @@
 			<version>1.10</version>
 		</dependency>
 		<dependency>
-      		<groupId>com.googlecode.objectify</groupId>
-      		<artifactId>objectify</artifactId>
-      		<version>5.1</version>
-    	</dependency>
-    	<dependency>
-    <groupId>javax.jdo</groupId>
-    <artifactId>jdo</artifactId>
-    <version>2.0-20050809.1515</version>
-</dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>5.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo</artifactId>
+			<version>2.0-20050809.1515</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		
 	</dependencies>
 </project>
