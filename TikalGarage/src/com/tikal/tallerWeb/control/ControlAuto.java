@@ -19,7 +19,8 @@ package com.tikal.tallerWeb.control;
 
 import java.util.List;
 
-import com.tikal.tallerWeb.rest.util.Callback;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndexAutoData;
 
@@ -32,13 +33,13 @@ public interface ControlAuto {
      * carga un auto a la aplicacion para trabajar con el.
      * @param origen el auto a cargar.
      */
-    void loadAuto(ServicioIndexAutoData origen);
+    void loadAuto(HttpServletRequest request, HttpServletResponse response, ServicioIndexAutoData origen);
     
     /**
      * consulta todos los autos que se tienen registrados.
      * @return los Autos.
      */
-    List<ServicioIndexAutoData> getAutos();
+    List<ServicioIndexAutoData> getAutos(HttpServletRequest request, HttpServletResponse response);
     
     /**
      * busca un auto por el numero de serie.
@@ -46,5 +47,5 @@ public interface ControlAuto {
      * @param cmd
      * @return 
      */
-    void buscarAuto(String numeroSerie, Callback<List<ServicioIndexAutoData>> cmd);
+    void buscarAuto(HttpServletRequest request, HttpServletResponse response,String numeroSerie, List<ServicioIndexAutoData> cmd);
 }

@@ -30,7 +30,7 @@ public interface AutoDAO {
 
     void guardar(Auto dato);
     
-    void buscar(final String numeroSerie, final Callback<List<ServicioIndexAutoData>> cmd);
+    List<ServicioIndexAutoData> buscar(final String numeroSerie, final List<ServicioIndexAutoData> cmd);
     
     Auto cargar(String numeroSerie);
     
@@ -40,5 +40,5 @@ public interface AutoDAO {
      * consulta todos de manera asyncrona
      * @param cmd 
      */
-    void getIndiceAutos(Callback<List<ServicioIndexAutoData>> cmd);
+    void getIndiceAutos(List<ServicioIndexAutoData> cmd);
 }

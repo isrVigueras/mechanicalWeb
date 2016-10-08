@@ -16,109 +16,151 @@
 
 package com.tikal.tallerWeb.data.access.rest;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.tikal.tallerWeb.data.access.AutoDAO;
-import com.tikal.tallerWeb.modelo.pagination.PaginaIndexAuto;
-import com.tikal.tallerWeb.rest.util.AsyncRestCall;
-import com.tikal.tallerWeb.rest.util.Callback;
-//import com.tikal.tallerWeb.rest.util.RestTemplateFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.googlecode.objectify.ObjectifyService;
+import com.tikal.tallerWeb.DataStoreClass;
 
 import technology.tikal.taller.automotriz.model.auto.Auto;
+import technology.tikal.taller.automotriz.model.auto.Equipamiento;
 import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndexAutoData;
 
 /**
  * @author Nekorp
  */
 @Service
-public class AutoDAOImp //implements AutoDAO 
+public class AutoDAOImp // implements AutoDAO
 {
 
-//    @Autowired
-//    @Qualifier("taller-RestTemplateFactory")
-//    private RestTemplateFactory factory;
-//    
-    public void guardar(Auto dato) {
-        // como no tengo idea si es nuevo o no primero se intenta como si ya existiera, si regresa 404 se crea.
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("numeroSerie", dato.getNumeroSerie());
-//            factory.getTemplate().postForLocation(factory.getRootUlr() + "/autos/{numeroSerie}", dato, map);
-        } catch (HttpClientErrorException ex) {
-            HttpStatus status = ex.getStatusCode();
-            if (status != HttpStatus.NOT_FOUND) {
-                throw ex; 
-            }
-//            URI resource = factory.getTemplate().postForLocation(factory.getRootUlr() + "/autos", dato);
-//            String[] uri = StringUtils.split(resource.toString(), '/');
-//            String id = uri[uri.length - 1];
-//            dato.setNumeroSerie(id);
-        }
-    }
+	// @Autowired
+	// @Qualifier("taller-RestTemplateFactory")
+	// private RestTemplateFactory factory;
+	//
+	public void guardar(Auto dato) {
+		// como no tengo idea si es nuevo o no primero se intenta como si ya
+		// existiera, si regresa 404 se crea.
+		ObjectifyService.ofy().save().entity(dato).now();
 
-    public void buscar(final String numeroSerie, final Callback<List<ServicioIndexAutoData>> cmd) {
-        Thread task = new AsyncRestCall<List<ServicioIndexAutoData>>() {
-            @Override
-            public List<ServicioIndexAutoData> executeCall() {
-                if (StringUtils.isEmpty(numeroSerie)) {
-                    return new LinkedList<>();
-                } 
-//                PaginaIndexAuto indice = factory.getTemplate().getForObject(factory.getRootUlr() + "/index/auto", PaginaIndexAuto.class);
-                List<ServicioIndexAutoData> respuesta = new LinkedList<>();
-//                for(ServicioIndexAutoData x: indice.getItems()) {
-//                    if(x.getNumeroSerie().startsWith(StringUtils.upperCase(numeroSerie))) {
-//                        respuesta.add(x);
-//                    }
-//                }
-                return respuesta;
-            }
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("numeroSerie", dato.getNumeroSerie());
+			// factory.getTemplate().postForLocation(factory.getRootUlr() +
+			// "/autos/{numeroSerie}", dato, map);
+			Key customerKey = KeyFactory.createKey("Auto", dato.getNumeroSerie());
+			Entity car = new Entity("Auto", customerKey);
+			car.setProperty("color", dato.getColor());
+			car.setProperty("equipamiento", dato.getEquipamiento());
+			car.setProperty("marca", dato.getMarca());
+			car.setProperty("modelo", dato.getModelo());
+			car.setProperty("placas", dato.getPlacas());
+			car.setProperty("tipo", dato.getTipo());
+			car.setProperty("version", dato.getVersion());
 
-            @Override
-            public Callback getCallBack() {
-                return cmd;
-            }
-        };
-        task.start();
-    }
-    
-    public Auto cargar(String numeroSerie) {
-    	return null;
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("id", numeroSerie);
-//        Auto r = factory.getTemplate().getForObject(factory.getRootUlr() + "/autos/{id}", Auto.class, map);
-//        return r;
-    }
+			DataStoreClass.datastore.put(car);
 
-//    @Override
-//    public List<ServicioIndexAutoData> getIndiceAutos() {
-//        PaginaIndexAuto r = factory.getTemplate().getForObject(factory.getRootUlr() + "/index/auto", PaginaIndexAuto.class);
-//        return r.getItems();
-//    }
+		} catch (HttpClientErrorException ex) {
 
-    public void getIndiceAutos(final Callback<List<ServicioIndexAutoData>> cmd) {
-//        Thread task = new AsyncRestCall<List<ServicioIndexAutoData>>() {
-            
-//            @Override
-//            public List<ServicioIndexAutoData> executeCall() {
-//                return getIndiceAutos();
-//            }
+		}
+	}
 
-//            @Override
-//            public Callback getCallBack() {
-//                return cmd;
-//            }
-//        };
-//        task.start();
-    }
+	public List<ServicioIndexAutoData> buscar(final String numeroSerie, final List<ServicioIndexAutoData> cmd) {
+		if (StringUtils.isEmpty(numeroSerie)) {
+			return new ArrayList<ServicioIndexAutoData>();
+		}
+		ServicioIndexAutoData sia= new ServicioIndexAutoData();
+		// PaginaIndexAuto indice =
+		// factory.getTemplate().getForObject(factory.getRootUlr() +
+		// "/index/auto", PaginaIndexAuto.class);
+		List<ServicioIndexAutoData> respuesta = new LinkedList<>();
+		Query query = new Query("Auto");
+		query.addFilter("numeroSerie", FilterOperator.EQUAL, numeroSerie);
+		PreparedQuery pq = DataStoreClass.datastore.prepare(query);
+
+		Entity e = pq.asSingleEntity();
+		if (e != null) {
+			sia.setNumeroSerie((String) e.getProperty("numeroSerie"));
+			sia.setPlacas((String) e.getProperty("placas"));
+			sia.setTipo((String) e.getProperty("tipo"));
+			respuesta.add(sia);
+			return respuesta;
+		}
+		return null;
+		// for(ServicioIndexAutoData x: indice.getItems()) {
+		// if(x.getNumeroSerie().startsWith(StringUtils.upperCase(numeroSerie)))
+		// {
+		// respuesta.add(x);
+		// }
+		// }
+	}
+
+	public Auto cargar(String numeroSerie) {
+		if (StringUtils.isEmpty(numeroSerie)) {
+			return new Auto();
+		}
+		// PaginaIndexAuto indice =
+		// factory.getTemplate().getForObject(factory.getRootUlr() +
+		// "/index/auto", PaginaIndexAuto.class);
+		List<ServicioIndexAutoData> respuesta = new LinkedList<>();
+		Query query = new Query("Auto");
+		query.addFilter("name", FilterOperator.EQUAL, numeroSerie);
+		PreparedQuery pq = DataStoreClass.datastore.prepare(query);
+
+		Entity e = pq.asSingleEntity();
+		if (e != null) {
+			Auto res = new Auto();
+			res.setColor((String) e.getProperty("color"));
+			res.setEquipamiento((Equipamiento) e.getProperty("equipamiento"));
+			res.setMarca((String) e.getProperty("marca"));
+			res.setModelo((String) e.getProperty("modelo"));
+			res.setNumeroSerie((String) e.getProperty("numeroSerie"));
+			res.setPlacas((String) e.getProperty("placas"));
+			res.setTipo((String) e.getProperty("tipo"));
+			res.setVersion((String) e.getProperty("version"));
+			return res;
+		}
+		return null;
+		// Map<String, Object> map = new HashMap<>();
+		// map.put("id", numeroSerie);
+		// Auto r = factory.getTemplate().getForObject(factory.getRootUlr() +
+		// "/autos/{id}", Auto.class, map);
+		// return r;
+	}
+
+	// @Override
+	// public List<ServicioIndexAutoData> getIndiceAutos() {
+	// PaginaIndexAuto r =
+	// factory.getTemplate().getForObject(factory.getRootUlr() + "/index/auto",
+	// PaginaIndexAuto.class);
+	// return r.getItems();
+	// }
+
+	public void getIndiceAutos(final List<ServicioIndexAutoData> cmd) {
+		// Thread task = new AsyncRestCall<List<ServicioIndexAutoData>>() {
+		
+		// @Override
+		// public List<ServicioIndexAutoData> executeCall() {
+		// return getIndiceAutos();
+		// }
+
+		// @Override
+		// public Callback getCallBack() {
+		// return cmd;
+		// }
+		// };
+		// task.start();
+	}
 }
